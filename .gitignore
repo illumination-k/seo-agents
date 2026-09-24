@@ -13,6 +13,9 @@ Thumbs.db
 .mise.local.toml
 mise.*.local.toml
 
+# gcloud
+/.gcloud/
+
 # Go
 *.exe
 *.exe~

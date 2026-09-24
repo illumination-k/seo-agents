@@ -11,6 +11,13 @@ shellcheck = "0.11.0"
 go = "1.27.0"
 "aqua:golangci/golangci-lint" = "2.13.1"
 "go:golang.org/x/vuln/cmd/govulncheck" = "1.7.0"
+gcloud = "586.0.0"
+
+[env]
+# Keep gcloud's config dir and ADC credentials inside the repo instead of ~/.config/gcloud.
+# Read by the gcloud CLI and google.auth (the official Google MCP servers); our own Go
+# server reads it too. The directory is gitignored and must never be committed.
+CLOUDSDK_CONFIG = "{{ config_root }}/.gcloud"
 
 [hooks]
 postinstall = "if [ -z \"${CI:-}\" ]; then prek install -f; fi"
