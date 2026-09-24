@@ -9,6 +9,3 @@ type = "command"
 command = 'bash "$(git rev-parse --show-toplevel)/.codex/hooks/session-start.sh"'
 timeout = 300
 statusMessage = "Preparing mise environment"
-
-[shell_environment_policy.set]
-MISE_ENV = "base,golang"

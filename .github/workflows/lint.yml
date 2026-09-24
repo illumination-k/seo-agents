@@ -1,4 +1,4 @@
-name: Lint Base
+name: Lint
 
 on:
   push:
@@ -13,8 +13,6 @@ jobs:
   lint:
     runs-on: ubuntu-slim
     timeout-minutes: 15
-    env:
-      MISE_ENV: base
     permissions:
       contents: read
     steps:
@@ -27,5 +25,8 @@ jobs:
       - name: Run pre-commit
         run: prek run --all-files
 
-      - name: lint with mise
+      - name: Lint base
         run: mise run lint:base
+
+      - name: Lint GitHub Actions
+        run: mise run lint:gha

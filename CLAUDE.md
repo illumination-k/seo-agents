@@ -67,12 +67,12 @@ Search Console・Google Ads のデータを 1 つのプラグインから扱え�
 
 ### MCP サーバの分担
 
-| API | サーバ | 備考 |
-| --- | --- | --- |
-| GA4 (Admin / Data API) | 公式 `googleanalytics/google-analytics-mcp` | `pipx run analytics-mcp` で起動 |
-| Google Ads (GAQL) | 公式 `googleads/google-ads-mcp` | `search` / `list_accessible_customers` など |
-| Search Console | 自作 `cmd/seo-mcp` | 公式なし |
-| Google Ads Keyword Planner | 自作 `cmd/seo-mcp` | 公式 Ads MCP は GAQL のみで `GenerateKeywordIdeas` を扱えないため |
+| API                        | サーバ                                      | 備考                                                              |
+| -------------------------- | ------------------------------------------- | ----------------------------------------------------------------- |
+| GA4 (Admin / Data API)     | 公式 `googleanalytics/google-analytics-mcp` | `pipx run analytics-mcp` で起動                                   |
+| Google Ads (GAQL)          | 公式 `googleads/google-ads-mcp`             | `search` / `list_accessible_customers` など                       |
+| Search Console             | 自作 `cmd/seo-mcp`                          | 公式なし                                                          |
+| Google Ads Keyword Planner | 自作 `cmd/seo-mcp`                          | 公式 Ads MCP は GAQL のみで `GenerateKeywordIdeas` を扱えないため |
 
 ### ディレクトリ構成（目標）
 

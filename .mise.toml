@@ -1,3 +1,85 @@
+[tools]
+uv = "0.12.5"
+dprint = "0.56.0"
+prek = "0.4.14"
+shfmt = "3.13.1"
+actionlint = "1.7.12"
+"pipx:zizmor" = "1.29.0"
+shellcheck = "0.11.0"
+"aqua:suzuki-shunsuke/ghalint" = "1.5.6"
+"aqua:suzuki-shunsuke/pinact" = "4.1.1"
+go = "1.27.0"
+"aqua:golangci/golangci-lint" = "2.13.1"
+"go:golang.org/x/vuln/cmd/govulncheck" = "1.7.0"
+
+[hooks]
+postinstall = "if [ -z \"${CI:-}\" ]; then prek install -f; fi"
+
+[tasks."fmt:base"]
+description = "Format with dprint and shfmt"
+run = [
+  "dprint fmt",
+  "shfmt -w .",
+]
+
+[tasks."lint:base"]
+description = "Lint with dprint, shfmt, shellcheck"
+run = [
+  "dprint check",
+  "shfmt -d .",
+  "find . -name '*.sh' -exec shellcheck {} +",
+]
+
+[tasks."test:base"]
+# The `test` aggregator depends on `test:*`, and mise errors out when a
+# depends pattern matches nothing. base itself has nothing to test, but this
+# placeholder keeps `mise run test` working in repos without base-level tests.
+description = "No base-level tests (placeholder so `mise run test` always resolves)"
+run = "echo 'no base-level tests'"
+
+[tasks."ci:base"]
+description = "Run base lint tasks"
+depends = ["lint:base"]
+
+[tasks."fmt:gha"]
+description = "Pin GitHub Actions refs with pinact"
+sources = [".github/**/*"]
+run = ["pinact run"]
+
+[tasks."lint:gha"]
+description = "Lint GitHub Actions with actionlint, zizmor, ghalint, pinact"
+sources = [".github/**/*"]
+# zizmor is scoped to .github rather than the repo root: since 1.29.0 it also
+# audits .pre-commit-config.yaml, and it aborts on prek's `repo: builtin`
+# entries. .github still covers every workflow and composite action.
+run = [
+  "actionlint",
+  "zizmor .github",
+  "ghalint run",
+  "pinact run --check",
+]
+
+[tasks."fmt:golang"]
+description = "Format Go code with golangci-lint"
+run = "golangci-lint fmt"
+
+[tasks."lint:golang"]
+description = "Lint Go with go vet, golangci-lint, fmt check, and govulncheck"
+run = [
+  "go vet ./...",
+  "golangci-lint run",
+  "golangci-lint fmt --diff",
+  "govulncheck ./...",
+]
+
+[tasks."test:golang"]
+description = "Run Go tests"
+run = "go test ./..."
+
+[tasks."ci:golang"]
+description = "Run Go lint and test tasks"
+depends = ["lint:golang", "test:golang"]
+
 [tasks.fmt]
 description = "Run all fmt:* tasks"
 depends = "fmt:*"
