@@ -67,12 +67,12 @@ Search Console・Google Ads のデータを 1 つのプラグインから扱え�
 
 ### MCP サーバの分担
 
-| API | サーバ | 備考 |
-| --- | --- | --- |
-| GA4 (Admin / Data API) | 公式 `googleanalytics/google-analytics-mcp` | `pipx run analytics-mcp` で起動 |
-| Google Ads (GAQL) | 公式 `googleads/google-ads-mcp` | `search` / `list_accessible_customers` など |
-| Search Console | 自作 `cmd/seo-mcp` | 公式なし |
-| Google Ads Keyword Planner | 自作 `cmd/seo-mcp` | 公式 Ads MCP は GAQL のみで `GenerateKeywordIdeas` を扱えないため |
+| API                        | サーバ                                      | 備考                                                              |
+| -------------------------- | ------------------------------------------- | ----------------------------------------------------------------- |
+| GA4 (Admin / Data API)     | 公式 `googleanalytics/google-analytics-mcp` | `pipx run analytics-mcp` で起動                                   |
+| Google Ads (GAQL)          | 公式 `googleads/google-ads-mcp`             | `search` / `list_accessible_customers` など                       |
+| Search Console             | 自作 `cmd/seo-mcp`                          | 公式なし                                                          |
+| Google Ads Keyword Planner | 自作 `cmd/seo-mcp`                          | 公式 Ads MCP は GAQL のみで `GenerateKeywordIdeas` を扱えないため |
 
 ### ディレクトリ構成（目標）
 
@@ -107,6 +107,7 @@ seo-agents/
 
 - すべて ADC（Application Default Credentials）に揃え、公式 MCP と同じ手順で動くようにする:
   `gcloud auth application-default login --scopes=https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/webmasters.readonly,https://www.googleapis.com/auth/adwords,https://www.googleapis.com/auth/cloud-platform`
+- gcloud CLI と ADC の認証情報は `CLOUDSDK_CONFIG`（`.mise.toml` の `[env]`）でリポジトリ直下の `.gcloud/` に固定する。`.gcloud/` は gitignore し、絶対に commit しない
 - Ads は追加で `GOOGLE_ADS_DEVELOPER_TOKEN` と（MCC 経由なら）`GOOGLE_ADS_LOGIN_CUSTOMER_ID` を環境変数で受け取る
 - Search Console のスコープは `webmasters.readonly` のみ。write スコープは要求しない
 - トークンや認証情報をログ・tool の出力に含めない

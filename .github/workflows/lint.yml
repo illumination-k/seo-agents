@@ -1,4 +1,4 @@
-name: TruffleHog Secret Scan
+name: Lint
 
 on:
   push:
@@ -10,18 +10,23 @@ concurrency:
   cancel-in-progress: "${{ github.event_name == 'pull_request' }}"
 
 jobs:
-  secret-scan:
+  lint:
     runs-on: ubuntu-slim
-    timeout-minutes: 10
+    timeout-minutes: 15
     permissions:
       contents: read
-
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          fetch-depth: 0
           persist-credentials: false
 
-      - uses: trufflesecurity/trufflehog@37b77001d0174ebec2fcca2bd83ff83a6d45a3ab # v3.95.3
-        with:
-          extra_args: --only-verified
+      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
+
+      - name: Run pre-commit
+        run: prek run --all-files
+
+      - name: Lint base
+        run: mise run lint:base
+
+      - name: Lint GitHub Actions
+        run: mise run lint:gha
